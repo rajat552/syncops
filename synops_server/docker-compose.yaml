@@ -1,0 +1,30 @@
+services:
+  # Development services
+  postgres:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: synops
+      POSTGRES_PASSWORD: "f4eQ7FYBiz_S9yUN6QZbupCtb1h6gbAP"
+    volumes:
+      - synops_data:/var/lib/postgresql/data
+
+
+  # Test services
+  postgres_test:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: synops_test
+      POSTGRES_PASSWORD: "XhSWzJ3H8qqwNQ8lhNLyQyIkHfOLXJ4j"
+    volumes:
+      - synops_test_data:/var/lib/postgresql/data
+
+
+volumes:
+  synops_data:
+  synops_test_data:
