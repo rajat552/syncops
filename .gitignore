@@ -17,3 +17,8 @@ pubspec_overrides.yaml
 
 # Serverpod Cloud CLI
 .scloud/
+
+
+# workflows architecture
+SyncOps_Antigravity_Master_Build_Prompt.md
+SyncOps_Professional_Hackathon_Project.md
