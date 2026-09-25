@@ -250,6 +250,24 @@ class EndpointJwtRefresh extends _iacc.EndpointRefreshJwtTokens {
       );
 }
 
+/// This is an example endpoint that returns a greeting message through
+/// its [hello] method.
+/// {@category Endpoint}
+class EndpointGreeting extends _isc.EndpointRef {
+  EndpointGreeting(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'greeting';
+
+  /// Returns a personalized greeting message: "Hello {name}".
+  _ida.Future<_iobj8qlp.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_iobj8qlp.Greeting>(
+        'greeting',
+        'hello',
+        {'name': name},
+      );
+}
+
 /// {@category Endpoint}
 class EndpointLocation extends _isc.EndpointRef {
   EndpointLocation(_isc.EndpointCaller caller) : super(caller);
@@ -455,24 +473,6 @@ class EndpointTask extends _isc.EndpointRef {
       );
 }
 
-/// This is an example endpoint that returns a greeting message through
-/// its [hello] method.
-/// {@category Endpoint}
-class EndpointGreeting extends _isc.EndpointRef {
-  EndpointGreeting(_isc.EndpointCaller caller) : super(caller);
-
-  @override
-  String get name => 'greeting';
-
-  /// Returns a personalized greeting message: "Hello {name}".
-  _ida.Future<_iobj8qlp.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_iobj8qlp.Greeting>(
-        'greeting',
-        'hello',
-        {'name': name},
-      );
-}
-
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -513,9 +513,9 @@ class Client extends _isc.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    greeting = EndpointGreeting(this);
     location = EndpointLocation(this);
     task = EndpointTask(this);
-    greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
 
@@ -523,11 +523,11 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointJwtRefresh jwtRefresh;
 
+  late final EndpointGreeting greeting;
+
   late final EndpointLocation location;
 
   late final EndpointTask task;
-
-  late final EndpointGreeting greeting;
 
   late final Modules modules;
 
@@ -535,9 +535,9 @@ class Client extends _isc.ServerpodClientShared {
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'greeting': greeting,
     'location': location,
     'task': task,
-    'greeting': greeting,
   };
 
   @override

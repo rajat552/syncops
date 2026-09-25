@@ -15,14 +15,12 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
-import 'package:synops_server/src/generated/future_calls.dart' as _iw5h3zzg;
 import 'package:synops_server/src/generated/location_ping.dart' as _ie0ms72o;
 import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../endpoints/location_endpoint.dart' as _iu1rtxjg;
 import '../endpoints/task_endpoint.dart' as _idmllfay;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
-export 'future_calls.dart' show ServerpodFutureCallsGetter;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -40,6 +38,12 @@ class Endpoints extends _is.EndpointDispatch {
           'jwtRefresh',
           null,
         ),
+      'greeting': _il624ik7.GreetingEndpoint()
+        ..initialize(
+          server,
+          'greeting',
+          null,
+        ),
       'location': _iu1rtxjg.LocationEndpoint()
         ..initialize(
           server,
@@ -50,12 +54,6 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'task',
-          null,
-        ),
-      'greeting': _il624ik7.GreetingEndpoint()
-        ..initialize(
-          server,
-          'greeting',
           null,
         ),
     };
@@ -262,6 +260,31 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         refreshToken: params['refreshToken'],
                       ),
+        ),
+      },
+    );
+    connectors['greeting'] = _is.EndpointConnector(
+      name: 'greeting',
+      endpoint: endpoints['greeting']!,
+      methodConnectors: {
+        'hello': _is.MethodConnector(
+          name: 'hello',
+          params: {
+            'name': _is.ParameterDescription(
+              name: 'name',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['greeting'] as _il624ik7.GreetingEndpoint).hello(
+                    session,
+                    params['name'],
+                  ),
         ),
       },
     );
@@ -631,39 +654,9 @@ class Endpoints extends _is.EndpointDispatch {
         ),
       },
     );
-    connectors['greeting'] = _is.EndpointConnector(
-      name: 'greeting',
-      endpoint: endpoints['greeting']!,
-      methodConnectors: {
-        'hello': _is.MethodConnector(
-          name: 'hello',
-          params: {
-            'name': _is.ParameterDescription(
-              name: 'name',
-              type: _is.getType<String>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _is.Session session,
-                Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['greeting'] as _il624ik7.GreetingEndpoint).hello(
-                    session,
-                    params['name'],
-                  ),
-        ),
-      },
-    );
     modules['serverpod_auth_idp'] = _iais.Endpoints()
       ..initializeEndpoints(server);
     modules['serverpod_auth_core'] = _iacs.Endpoints()
       ..initializeEndpoints(server);
-  }
-
-  @override
-  _is.FutureCallDispatch? get futureCalls {
-    return _iw5h3zzg.FutureCalls();
   }
 }

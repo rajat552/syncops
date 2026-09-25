@@ -40,9 +40,11 @@ class TaskEndpoint extends Endpoint {
       actorId: createdById,
       actorName: 'Coordinator #$createdById',
       type: 'TASK_CREATED',
-      message: 'Emergency incident created: "$title" (Severity: ${insertedTask.severity}).',
+      message:
+          'Emergency incident created: "$title" (Severity: ${insertedTask.severity}).',
       timestamp: now,
-      metadata: '{"severity": "${insertedTask.severity}", "lat": $latitude, "lng": $longitude}',
+      metadata:
+          '{"severity": "${insertedTask.severity}", "lat": $latitude, "lng": $longitude}',
     );
     await TaskEvent.db.insertRow(session, event);
 
@@ -51,7 +53,10 @@ class TaskEndpoint extends Endpoint {
     await session.messages.postMessage('task_events_$taskId', event);
     await session.messages.postMessage('task_events_all', event);
 
-    session.log('Task #$taskId created by User #$createdById', level: LogLevel.info);
+    session.log(
+      'Task #$taskId created by User #$createdById',
+      level: LogLevel.info,
+    );
     return insertedTask;
   }
 
@@ -93,7 +98,9 @@ class TaskEndpoint extends Endpoint {
     // Atomic concurrency check: verify task is still claimable
     if (task.status != 'PENDING' || task.assignedToId != null) {
       final currentAssignee = task.assignedResponderName ?? 'another responder';
-      throw StateError('Task #$taskId is no longer available. It was claimed by $currentAssignee.');
+      throw StateError(
+        'Task #$taskId is no longer available. It was claimed by $currentAssignee.',
+      );
     }
 
     final now = DateTime.now().toUtc();
@@ -114,9 +121,11 @@ class TaskEndpoint extends Endpoint {
       actorId: responderId,
       actorName: responderName,
       type: 'TASK_ACCEPTED',
-      message: '$responderName accepted the emergency task. Response window: ${timeoutSeconds}s.',
+      message:
+          '$responderName accepted the emergency task. Response window: ${timeoutSeconds}s.',
       timestamp: now,
-      metadata: '{"responderId": $responderId, "timeoutSeconds": $timeoutSeconds}',
+      metadata:
+          '{"responderId": $responderId, "timeoutSeconds": $timeoutSeconds}',
     );
     await TaskEvent.db.insertRow(session, auditEvent);
 
@@ -134,7 +143,10 @@ class TaskEndpoint extends Endpoint {
     await session.messages.postMessage('task_events_$taskId', auditEvent);
     await session.messages.postMessage('task_events_all', auditEvent);
 
-    session.log('Task #$taskId accepted by $responderName (timeout scheduled in ${timeoutSeconds}s)', level: LogLevel.info);
+    session.log(
+      'Task #$taskId accepted by $responderName (timeout scheduled in ${timeoutSeconds}s)',
+      level: LogLevel.info,
+    );
     return updatedTask;
   }
 
@@ -154,7 +166,9 @@ class TaskEndpoint extends Endpoint {
 
     // Verify ownership
     if (task.assignedToId != responderId) {
-      throw StateError('Responder #$responderId is not authorized to update Task #$taskId.');
+      throw StateError(
+        'Responder #$responderId is not authorized to update Task #$taskId.',
+      );
     }
 
     final validTransitions = {
@@ -166,7 +180,9 @@ class TaskEndpoint extends Endpoint {
 
     final allowed = validTransitions[task.status] ?? {};
     if (!allowed.contains(newStatus)) {
-      throw StateError('Invalid state transition from "${task.status}" to "$newStatus".');
+      throw StateError(
+        'Invalid state transition from "${task.status}" to "$newStatus".',
+      );
     }
 
     final now = DateTime.now().toUtc();
@@ -196,7 +212,8 @@ class TaskEndpoint extends Endpoint {
       actorId: responderId,
       actorName: task.assignedResponderName ?? 'Responder #$responderId',
       type: 'TASK_$newStatus',
-      message: 'Status updated to $newStatus by ${task.assignedResponderName ?? 'Responder #$responderId'}.',
+      message:
+          'Status updated to $newStatus by ${task.assignedResponderName ?? 'Responder #$responderId'}.',
       timestamp: now,
       metadata: '{"newStatus": "$newStatus"}',
     );
@@ -218,7 +235,10 @@ class TaskEndpoint extends Endpoint {
     await session.messages.postMessage('task_events_$taskId', event);
     await session.messages.postMessage('task_events_all', event);
 
-    session.log('Task #$taskId transitioned to $newStatus', level: LogLevel.info);
+    session.log(
+      'Task #$taskId transitioned to $newStatus',
+      level: LogLevel.info,
+    );
     return updatedTask;
   }
 
@@ -235,10 +255,13 @@ class TaskEndpoint extends Endpoint {
     }
 
     if (task.assignedToId != responderId) {
-      throw StateError('Responder #$responderId is not assigned to Task #$taskId.');
+      throw StateError(
+        'Responder #$responderId is not assigned to Task #$taskId.',
+      );
     }
 
-    final previousResponder = task.assignedResponderName ?? 'Responder #$responderId';
+    final previousResponder =
+        task.assignedResponderName ?? 'Responder #$responderId';
     final now = DateTime.now().toUtc();
 
     // Reopen task
@@ -258,9 +281,11 @@ class TaskEndpoint extends Endpoint {
       actorId: responderId,
       actorName: previousResponder,
       type: 'TASK_RELEASED',
-      message: '$previousResponder released task: "$reason". Reopened for dispatch.',
+      message:
+          '$previousResponder released task: "$reason". Reopened for dispatch.',
       timestamp: now,
-      metadata: '{"reason": "$reason", "reassignmentCount": ${task.reassignmentCount}}',
+      metadata:
+          '{"reason": "$reason", "reassignmentCount": ${task.reassignmentCount}}',
     );
     await TaskEvent.db.insertRow(session, event);
 
@@ -283,7 +308,9 @@ class TaskEndpoint extends Endpoint {
     }
 
     // Force expiration in database
-    task.expiresAt = DateTime.now().toUtc().subtract(const Duration(seconds: 1));
+    task.expiresAt = DateTime.now().toUtc().subtract(
+      const Duration(seconds: 1),
+    );
     await Task.db.updateRow(session, task);
 
     // Cancel existing scheduled future call
@@ -321,7 +348,9 @@ class TaskEndpoint extends Endpoint {
         completed++;
       } else {
         active++;
-        if (t.status == 'ACCEPTED' || t.status == 'EN_ROUTE' || t.status == 'IN_PROGRESS') {
+        if (t.status == 'ACCEPTED' ||
+            t.status == 'EN_ROUTE' ||
+            t.status == 'IN_PROGRESS') {
           inResponse++;
         }
         if (t.reassignmentCount > 0 || t.severity == 'CRITICAL') {
@@ -349,7 +378,9 @@ class TaskEndpoint extends Endpoint {
 
   /// Real-time stream of audit events for a specific task.
   Stream<TaskEvent> subscribeToTaskEvents(Session session, int taskId) async* {
-    final stream = session.messages.createStream<TaskEvent>('task_events_$taskId');
+    final stream = session.messages.createStream<TaskEvent>(
+      'task_events_$taskId',
+    );
     await for (final event in stream) {
       yield event;
     }

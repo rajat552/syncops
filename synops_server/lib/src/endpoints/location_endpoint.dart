@@ -11,7 +11,10 @@ class LocationEndpoint extends Endpoint {
 
     // Update task's last activity timestamp and push back the deadline
     final task = await Task.db.findById(session, ping.taskId);
-    if (task != null && (task.status == 'ACCEPTED' || task.status == 'EN_ROUTE' || task.status == 'IN_PROGRESS')) {
+    if (task != null &&
+        (task.status == 'ACCEPTED' ||
+            task.status == 'EN_ROUTE' ||
+            task.status == 'IN_PROGRESS')) {
       final now = DateTime.now().toUtc();
       task.lastActivityAt = now;
       task.expiresAt = now.add(const Duration(seconds: 45));
@@ -32,8 +35,13 @@ class LocationEndpoint extends Endpoint {
   }
 
   /// Live stream of location updates for a specific emergency incident.
-  Stream<LocationPing> subscribeToTaskLocation(Session session, int taskId) async* {
-    final stream = session.messages.createStream<LocationPing>('location_pings_$taskId');
+  Stream<LocationPing> subscribeToTaskLocation(
+    Session session,
+    int taskId,
+  ) async* {
+    final stream = session.messages.createStream<LocationPing>(
+      'location_pings_$taskId',
+    );
     await for (final ping in stream) {
       yield ping;
     }
@@ -41,7 +49,9 @@ class LocationEndpoint extends Endpoint {
 
   /// Live stream of all active responders across the operations map.
   Stream<LocationPing> subscribeToAllLocations(Session session) async* {
-    final stream = session.messages.createStream<LocationPing>('location_pings_all');
+    final stream = session.messages.createStream<LocationPing>(
+      'location_pings_all',
+    );
     await for (final ping in stream) {
       yield ping;
     }

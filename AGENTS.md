@@ -1,4 +1,15 @@
-# Flutter & Serverpod project
+# Flutter & Serverpod project: SyncOps
+
+## About SyncOps
+**SyncOps** is a real-time emergency task coordination platform designed to ensure no emergency task is lost when a responder stops responding.
+- **Core Hero Workflow:** Critical Incident Creation → Dispatch Queue → Responder Claiming (atomic concurrency check) → Live GPS Telemetry Streaming → Simulated or Real Inactivity → Serverpod Future Call Timeout Detection → Idempotent Auto-Recovery & Queue Reopening → Second Responder Claiming → Full Mission Progression (EN_ROUTE → ARRIVED → IN_PROGRESS → COMPLETED) → Complete Immutable Event Timeline Audit.
+- **Backend Architecture:**
+  - `TaskEndpoint`: Full CRUD, state machine transitions, concurrent claim rejection, simulated timeout triggering, and metrics.
+  - `LocationEndpoint`: Transient high-frequency GPS ping streaming over Serverpod channels (`location_pings_$taskId`, `location_pings_all`) without overloading PostgreSQL.
+  - `TaskTimeoutCall`: Serverpod Future Call executing background timeout verification and automatic task recovery.
+  - `Task` & `TaskEvent` PostgreSQL ORM models with audit history and timeline tracking.
+- **Frontend Architecture:**
+  - Operations Center UI with Coordinator Dashboard (metrics, radar map, live feeds), Field Responder Terminal (telemetry transmitter, one-touch action buttons), and an interactive 7-Step Hackathon Hero Demo Controller.
 
 This project is a Flutter app (frontend) backed by a Serverpod server (backend). Always build the app's backend with Serverpod.
 Build for multiple users, use Serverpod's built-in authentication, which is already set up in `lib/server.dart`.
@@ -46,5 +57,3 @@ If the user asks you to test the app:
 3. Use `flutter_driver` (`dart` MCP) to navigate through the app
 
 The app is launched from `synops_flutter/lib/driver.dart`, which starts the Flutter driver extension with text entry emulation turned off so the app stays usable by hand. To let the driver type, set `enableTextEntryEmulation: true` there and `hot_restart` the app.
-
-IMPORTANT: After building the first version of the app, update this AGENTS.md file with information about the app we're building. KEEP the info about the MCP server and the checklist. Remove this paragraph.

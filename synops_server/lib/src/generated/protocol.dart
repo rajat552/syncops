@@ -20,8 +20,6 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import 'package:synops_server/src/generated/task.dart' as _i67ylxln;
 import 'package:synops_server/src/generated/task_event.dart' as _idreae9h;
 import 'dashboard_summary.dart' as _ijes90i9;
-import 'future_calls_generated_models/task_timeout_call_handle_timeout_model.dart'
-    as _ih1ht7tw;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'location_ping.dart' as _i775ycu8;
 import 'task.dart' as _iwn6t6fs;
@@ -262,9 +260,6 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _ijes90i9.DashboardSummary) {
       return _ijes90i9.DashboardSummary.fromJson(data) as T;
     }
-    if (t == _ih1ht7tw.TaskTimeoutCallHandleTimeoutModel) {
-      return _ih1ht7tw.TaskTimeoutCallHandleTimeoutModel.fromJson(data) as T;
-    }
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
@@ -279,12 +274,6 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_ijes90i9.DashboardSummary?>()) {
       return (data != null ? _ijes90i9.DashboardSummary.fromJson(data) : null)
-          as T;
-    }
-    if (t == _is.getType<_ih1ht7tw.TaskTimeoutCallHandleTimeoutModel?>()) {
-      return (data != null
-              ? _ih1ht7tw.TaskTimeoutCallHandleTimeoutModel.fromJson(data)
-              : null)
           as T;
     }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
@@ -324,8 +313,6 @@ class Protocol extends _is.DatabaseSerializationManager {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _ijes90i9.DashboardSummary => 'DashboardSummary',
-      _ih1ht7tw.TaskTimeoutCallHandleTimeoutModel =>
-        'TaskTimeoutCallHandleTimeoutModel',
       _izw8z7ou.Greeting => 'Greeting',
       _i775ycu8.LocationPing => 'LocationPing',
       _iwn6t6fs.Task => 'Task',
@@ -346,8 +333,6 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (data) {
       case _ijes90i9.DashboardSummary():
         return 'DashboardSummary';
-      case _ih1ht7tw.TaskTimeoutCallHandleTimeoutModel():
-        return 'TaskTimeoutCallHandleTimeoutModel';
       case _izw8z7ou.Greeting():
         return 'Greeting';
       case _i775ycu8.LocationPing():
@@ -384,11 +369,6 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'DashboardSummary') {
       return deserialize<_ijes90i9.DashboardSummary>(data['data']);
-    }
-    if (dataClassName == 'TaskTimeoutCallHandleTimeoutModel') {
-      return deserialize<_ih1ht7tw.TaskTimeoutCallHandleTimeoutModel>(
-        data['data'],
-      );
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);

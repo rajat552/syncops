@@ -7,24 +7,35 @@ class TaskTimeoutCall extends FutureCall {
 
     final task = await Task.db.findById(session, taskId);
     if (task == null) {
-      session.log('Task #$taskId not found for timeout check', level: LogLevel.warning);
+      session.log(
+        'Task #$taskId not found for timeout check',
+        level: LogLevel.warning,
+      );
       return;
     }
 
     // Only recover if still in an active uncompleted state
     final activeStatuses = {'ACCEPTED', 'EN_ROUTE', 'IN_PROGRESS'};
     if (!activeStatuses.contains(task.status)) {
-      session.log('Task #$taskId status is "${task.status}". No timeout recovery needed.', level: LogLevel.info);
+      session.log(
+        'Task #$taskId status is "${task.status}". No timeout recovery needed.',
+        level: LogLevel.info,
+      );
       return;
     }
 
     // If expiresAt was pushed back by a recent ping, do not expire yet
-    if (task.expiresAt != null && DateTime.now().toUtc().isBefore(task.expiresAt!)) {
-      session.log('Task #$taskId expiresAt is in the future (${task.expiresAt}). Skipping timeout.', level: LogLevel.info);
+    if (task.expiresAt != null &&
+        DateTime.now().toUtc().isBefore(task.expiresAt!)) {
+      session.log(
+        'Task #$taskId expiresAt is in the future (${task.expiresAt}). Skipping timeout.',
+        level: LogLevel.info,
+      );
       return;
     }
 
-    final previousResponder = task.assignedResponderName ?? 'Responder #${task.assignedToId}';
+    final previousResponder =
+        task.assignedResponderName ?? 'Responder #${task.assignedToId}';
     final previousStatus = task.status;
 
     // Idempotent atomic state recovery
@@ -41,9 +52,11 @@ class TaskTimeoutCall extends FutureCall {
       taskId: taskId,
       actorName: 'SYSTEM_AUTOPILOT',
       type: 'TIMEOUT_AUTO_RECOVERED',
-      message: 'Responder ($previousResponder) became inactive in state $previousStatus. Task automatically recovered and reopened for dispatch.',
+      message:
+          'Responder ($previousResponder) became inactive in state $previousStatus. Task automatically recovered and reopened for dispatch.',
       timestamp: DateTime.now().toUtc(),
-      metadata: '{"previousResponder": "$previousResponder", "reassignmentCount": ${task.reassignmentCount}}',
+      metadata:
+          '{"previousResponder": "$previousResponder", "reassignmentCount": ${task.reassignmentCount}}',
     );
     await TaskEvent.db.insertRow(session, auditEvent);
 
@@ -52,6 +65,9 @@ class TaskTimeoutCall extends FutureCall {
     await session.messages.postMessage('task_events_$taskId', auditEvent);
     await session.messages.postMessage('task_events_all', auditEvent);
 
-    session.log('Task #$taskId automatically recovered and reopened (Reassignment #${task.reassignmentCount}).', level: LogLevel.info);
+    session.log(
+      'Task #$taskId automatically recovered and reopened (Reassignment #${task.reassignmentCount}).',
+      level: LogLevel.info,
+    );
   }
 }
