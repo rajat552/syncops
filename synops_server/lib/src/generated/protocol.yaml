@@ -9,8 +9,6 @@ emailIdp:
   - hasAccount:
 jwtRefresh:
   - refreshAccessToken:
-greeting:
-  - hello:
 location:
   - sendLocationPing:
   - subscribeToTaskLocation:
@@ -29,3 +27,5 @@ task:
   - subscribeToTaskUpdates:
   - subscribeToTaskEvents:
   - subscribeToAllEvents:
+greeting:
+  - hello:

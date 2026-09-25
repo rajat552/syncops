@@ -19,6 +19,9 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:serverpod_test/serverpod_test.dart' as _ist;
 import 'package:synops_server/src/generated/dashboard_summary.dart'
     as _int2uzm2;
+import 'package:synops_server/src/generated/future_calls.dart' as _iw5h3zzg;
+import 'package:synops_server/src/generated/future_calls_generated_models/task_timeout_call_handle_timeout_model.dart'
+    as _irelzxe0;
 import 'package:synops_server/src/generated/greetings/greeting.dart'
     as _idqp2kyz;
 import 'package:synops_server/src/generated/location_ping.dart' as _ie0ms72o;
@@ -152,15 +155,17 @@ void withServerpod(
 }
 
 class TestEndpoints {
+  late final futureCalls = _FutureCalls();
+
   late final _EmailIdpEndpoint emailIdp;
 
   late final _JwtRefreshEndpoint jwtRefresh;
 
-  late final _GreetingEndpoint greeting;
-
   late final _LocationEndpoint location;
 
   late final _TaskEndpoint task;
+
+  late final _GreetingEndpoint greeting;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -178,10 +183,6 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
-    greeting = _GreetingEndpoint(
-      endpoints,
-      serializationManager,
-    );
     location = _LocationEndpoint(
       endpoints,
       serializationManager,
@@ -190,7 +191,15 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
+    greeting = _GreetingEndpoint(
+      endpoints,
+      serializationManager,
+    );
   }
+}
+
+class _FutureCalls {
+  late final taskTimeoutCall = _TaskTimeoutCallFutureCall();
 }
 
 class _EmailIdpEndpoint {
@@ -503,48 +512,6 @@ class _JwtRefreshEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_iacs.AuthSuccess>);
-        return _localReturnValue;
-      } finally {
-        await _localUniqueSession.close();
-      }
-    });
-  }
-}
-
-class _GreetingEndpoint {
-  _GreetingEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
-
-  final _is.EndpointDispatch _endpointDispatch;
-
-  final _is.SerializationManager _serializationManager;
-
-  _ida.Future<_idqp2kyz.Greeting> hello(
-    _ist.TestSessionBuilder sessionBuilder,
-    String name,
-  ) async {
-    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession =
-          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
-            endpoint: 'greeting',
-            method: 'hello',
-          );
-      try {
-        var _localCallContext = await _endpointDispatch.getMethodCallContext(
-          createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'greeting',
-          methodName: 'hello',
-          parameters: _ist.testObjectToJson({'name': name}),
-          serializationManager: _serializationManager,
-        );
-        var _localReturnValue =
-            await (_localCallContext.method.call(
-                  _localUniqueSession,
-                  _localCallContext.arguments,
-                )
-                as _ida.Future<_idqp2kyz.Greeting>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1107,5 +1074,66 @@ class _TaskEndpoint {
       _localTestStreamManager.outputStreamController,
     );
     return _localTestStreamManager.outputStreamController.stream;
+  }
+}
+
+class _GreetingEndpoint {
+  _GreetingEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_idqp2kyz.Greeting> hello(
+    _ist.TestSessionBuilder sessionBuilder,
+    String name,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'greeting',
+            method: 'hello',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'greeting',
+          methodName: 'hello',
+          parameters: _ist.testObjectToJson({'name': name}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_idqp2kyz.Greeting>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _TaskTimeoutCallFutureCall {
+  Future<void> handleTimeout(
+    _ist.TestSessionBuilder sessionBuilder,
+    int taskId,
+  ) async {
+    var object = _irelzxe0.TaskTimeoutCallHandleTimeoutModel(taskId: taskId);
+    var _localUniqueSession =
+        (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild();
+    try {
+      await _iw5h3zzg.TaskTimeoutCallHandleTimeoutFutureCall().invoke(
+        _localUniqueSession,
+        object,
+      );
+    } finally {
+      await _localUniqueSession.close();
+    }
   }
 }
