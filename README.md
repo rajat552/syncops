@@ -271,54 +271,5 @@ flutter test
 dart analyze
 ```
 
----
-
-## 🎬 The 3-Minute Hackathon Judge Demo Walkthrough
-
-SyncOps features an **in-app Hero Demo Controller** accessible via the **`[ HERO DEMO ]`** button in the top navigation bar.
-
-1. **0:00 – 0:30 (The Problem & Incident Creation)**:
-   - Switch role to **Dispatcher Maya**.
-   - Tap `[ 1. DISPATCH INCIDENT ]` in the demo controller (or tap `+ DISPATCH INCIDENT` in the dashboard).
-   - A critical "Trauma Blood Delivery" incident appears with a 30-second response window.
-2. **0:30 – 1:00 (Unit Claims Mission)**:
-   - Tap `[ 2. RESPONDER A ACCEPTS ]`.
-   - **Officer Alex Chen** claims the task. Serverpod atomically binds the responder and schedules `TaskTimeoutCall`.
-   - The status immediately flips to `ACCEPTED` on the Coordinator radar.
-3. **1:00 – 1:30 (Live GPS Telemetry Streaming)**:
-   - Tap `[ 3. STREAM GPS PINGS ]` or toggle the telemetry switch in the Responder Terminal.
-   - Watch live GPS pings move across the tactical radar without touching the database.
-4. **1:30 – 2:00 (Hero Moment: Simulated Abandonment & Auto-Recovery)**:
-   - Tap `[ 4. SIMULATE ABANDONMENT ]`.
-   - The responder stops transmitting. The countdown deadline expires.
-   - **Serverpod's `TaskTimeoutCall` fires:**
-     - Responder Alex is removed from the task.
-     - The task status reverts to **`PENDING`**.
-     - `reassignmentCount` increments to `1`.
-     - An alarm badge appears: **`REOPENED DUE TO TIMEOUT`**.
-     - `TIMEOUT_AUTO_RECOVERED` is appended to the audit timeline.
-   - **No dispatcher manually intervened—the system recovered itself.**
-5. **2:00 – 2:30 (Secondary Unit Re-Assignment)**:
-   - Switch to **Responder Bailey Torres (Rescue 4)**.
-   - Tap `[ 6. RESPONDER B ACCEPTS ]`.
-   - Bailey claims the reopened mission from the recovered state.
-6. **2:30 – 3:00 (Mission Completion & Audit Trail)**:
-   - Tap `[ 7. COMPLETE MISSION ]`.
-   - Status advances through `EN_ROUTE` → `ARRIVED` → `IN_PROGRESS` → `COMPLETED`.
-   - Open the **Audit Timeline** to show the complete, immutable historical audit trail proving every transition from initial dispatch, to inactivity recovery, to final mission completion.
-
----
-
-## 🏆 Hackathon Alignment & Judging Criteria
-
-| Criterion | Weight | How SyncOps Delivers |
-|---|---|---|
-| **Does it work** | **30%** | 100% functional end-to-end workflow: dispatching, atomic concurrency, live GPS telemetry, automated timeout recovery, and task completion verified by unit, integration, and widget tests. |
-| **Use of Serverpod Stack** | **25%** | Deep, idiomatic utilization of Serverpod 4: typed endpoints, ORM persistence, future calls (`TaskTimeoutCall`), real-time WebSocket pub/sub streams, and embedded PostgreSQL migrations. |
-| **Craft & Technical Creativity** | **25%** | High-performance separation of concerns (streaming high-frequency GPS without DB load; persisting only milestones), atomic concurrency conflict rejection, custom vector radar painter, and military-grade UX. |
-| **Usefulness** | **20%** | Solves a real-world life-or-death operational problem in emergency services: preventing lost missions when first responders become incapacitated. |
-
----
-
 ## 📜 License
 Developed for the Serverpod Hackathon. Licensed under the Apache License, Version 2.0.
