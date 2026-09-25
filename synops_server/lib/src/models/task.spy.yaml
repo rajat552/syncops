@@ -1,0 +1,21 @@
+class: Task
+table: task
+fields:
+  title: String
+  description: String
+  latitude: double
+  longitude: double
+  severity: String
+  status: String
+  createdById: int
+  assignedToId: int?
+  assignedResponderName: String?
+  createdAt: DateTime
+  acceptedAt: DateTime?
+  startedAt: DateTime?
+  arrivedAt: DateTime?
+  completedAt: DateTime?
+  expiresAt: DateTime?
+  lastActivityAt: DateTime?
+  reassignmentCount: int, default=0
+  requiredSkill: String?

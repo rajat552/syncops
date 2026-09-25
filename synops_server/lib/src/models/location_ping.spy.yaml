@@ -1,0 +1,10 @@
+class: LocationPing
+fields:
+  responderId: int
+  responderName: String
+  taskId: int
+  latitude: double
+  longitude: double
+  timestamp: DateTime
+  batteryLevel: double?
+  speed: double?

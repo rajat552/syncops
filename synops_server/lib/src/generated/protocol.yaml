@@ -9,5 +9,23 @@ emailIdp:
   - hasAccount:
 jwtRefresh:
   - refreshAccessToken:
+location:
+  - sendLocationPing:
+  - subscribeToTaskLocation:
+  - subscribeToAllLocations:
+task:
+  - createTask:
+  - getAllTasks:
+  - getTask:
+  - getOpenTasks:
+  - acceptTask:
+  - updateTaskStatus:
+  - releaseTask:
+  - triggerSimulatedTimeout:
+  - getTaskTimeline:
+  - getDashboardSummary:
+  - subscribeToTaskUpdates:
+  - subscribeToTaskEvents:
+  - subscribeToAllEvents:
 greeting:
   - hello:

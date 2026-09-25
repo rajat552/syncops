@@ -17,8 +17,12 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
+import 'package:synops_client/src/protocol/dashboard_summary.dart' as _i997jmad;
 import 'package:synops_client/src/protocol/greetings/greeting.dart'
     as _iobj8qlp;
+import 'package:synops_client/src/protocol/location_ping.dart' as _ijedxsy4;
+import 'package:synops_client/src/protocol/task.dart' as _iz13ab3z;
+import 'package:synops_client/src/protocol/task_event.dart' as _ixhio2rx;
 import 'protocol.dart' as _il2as5qe;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
@@ -246,6 +250,211 @@ class EndpointJwtRefresh extends _iacc.EndpointRefreshJwtTokens {
       );
 }
 
+/// {@category Endpoint}
+class EndpointLocation extends _isc.EndpointRef {
+  EndpointLocation(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'location';
+
+  /// Responder submits a live GPS ping/telemetry update.
+  _ida.Future<void> sendLocationPing(_ijedxsy4.LocationPing ping) =>
+      caller.callServerEndpoint<void>(
+        'location',
+        'sendLocationPing',
+        {'ping': ping},
+      );
+
+  /// Live stream of location updates for a specific emergency incident.
+  _ida.Stream<_ijedxsy4.LocationPing> subscribeToTaskLocation(int taskId) =>
+      caller.callStreamingServerEndpoint<
+        _ida.Stream<_ijedxsy4.LocationPing>,
+        _ijedxsy4.LocationPing
+      >(
+        'location',
+        'subscribeToTaskLocation',
+        {'taskId': taskId},
+        {},
+      );
+
+  /// Live stream of all active responders across the operations map.
+  _ida.Stream<_ijedxsy4.LocationPing> subscribeToAllLocations() =>
+      caller.callStreamingServerEndpoint<
+        _ida.Stream<_ijedxsy4.LocationPing>,
+        _ijedxsy4.LocationPing
+      >(
+        'location',
+        'subscribeToAllLocations',
+        {},
+        {},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointTask extends _isc.EndpointRef {
+  EndpointTask(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'task';
+
+  /// Creates a new emergency task/incident.
+  _ida.Future<_iz13ab3z.Task> createTask({
+    required String title,
+    required String description,
+    required double latitude,
+    required double longitude,
+    required String severity,
+    required int createdById,
+    String? requiredSkill,
+    required int timeoutSeconds,
+  }) => caller.callServerEndpoint<_iz13ab3z.Task>(
+    'task',
+    'createTask',
+    {
+      'title': title,
+      'description': description,
+      'latitude': latitude,
+      'longitude': longitude,
+      'severity': severity,
+      'createdById': createdById,
+      'requiredSkill': requiredSkill,
+      'timeoutSeconds': timeoutSeconds,
+    },
+  );
+
+  /// Returns all tasks ordered by creation time descending.
+  _ida.Future<List<_iz13ab3z.Task>> getAllTasks() =>
+      caller.callServerEndpoint<List<_iz13ab3z.Task>>(
+        'task',
+        'getAllTasks',
+        {},
+      );
+
+  /// Returns a single task by ID.
+  _ida.Future<_iz13ab3z.Task?> getTask(int taskId) =>
+      caller.callServerEndpoint<_iz13ab3z.Task?>(
+        'task',
+        'getTask',
+        {'taskId': taskId},
+      );
+
+  /// Returns only tasks that are available for acceptance (PENDING).
+  _ida.Future<List<_iz13ab3z.Task>> getOpenTasks() =>
+      caller.callServerEndpoint<List<_iz13ab3z.Task>>(
+        'task',
+        'getOpenTasks',
+        {},
+      );
+
+  /// Responder accepts a task. Protected against race conditions / concurrency conflicts.
+  _ida.Future<_iz13ab3z.Task> acceptTask({
+    required int taskId,
+    required int responderId,
+    required String responderName,
+    required int timeoutSeconds,
+  }) => caller.callServerEndpoint<_iz13ab3z.Task>(
+    'task',
+    'acceptTask',
+    {
+      'taskId': taskId,
+      'responderId': responderId,
+      'responderName': responderName,
+      'timeoutSeconds': timeoutSeconds,
+    },
+  );
+
+  /// Responder updates the state along the emergency workflow:
+  /// ACCEPTED -> EN_ROUTE -> ARRIVED -> IN_PROGRESS -> COMPLETED
+  _ida.Future<_iz13ab3z.Task> updateTaskStatus({
+    required int taskId,
+    required int responderId,
+    required String newStatus,
+    required int timeoutSeconds,
+  }) => caller.callServerEndpoint<_iz13ab3z.Task>(
+    'task',
+    'updateTaskStatus',
+    {
+      'taskId': taskId,
+      'responderId': responderId,
+      'newStatus': newStatus,
+      'timeoutSeconds': timeoutSeconds,
+    },
+  );
+
+  /// Responder voluntarily releases a task before completion.
+  _ida.Future<_iz13ab3z.Task> releaseTask({
+    required int taskId,
+    required int responderId,
+    required String reason,
+  }) => caller.callServerEndpoint<_iz13ab3z.Task>(
+    'task',
+    'releaseTask',
+    {
+      'taskId': taskId,
+      'responderId': responderId,
+      'reason': reason,
+    },
+  );
+
+  /// Simulated timeout trigger specifically designed for the Hackathon Judge Demo.
+  /// Immediately executes the automated recovery workflow.
+  _ida.Future<_iz13ab3z.Task> triggerSimulatedTimeout({required int taskId}) =>
+      caller.callServerEndpoint<_iz13ab3z.Task>(
+        'task',
+        'triggerSimulatedTimeout',
+        {'taskId': taskId},
+      );
+
+  /// Returns the complete event audit timeline for a task.
+  _ida.Future<List<_ixhio2rx.TaskEvent>> getTaskTimeline(int taskId) =>
+      caller.callServerEndpoint<List<_ixhio2rx.TaskEvent>>(
+        'task',
+        'getTaskTimeline',
+        {'taskId': taskId},
+      );
+
+  /// Returns high-level metrics for the Coordinator dashboard cards.
+  _ida.Future<_i997jmad.DashboardSummary> getDashboardSummary() =>
+      caller.callServerEndpoint<_i997jmad.DashboardSummary>(
+        'task',
+        'getDashboardSummary',
+        {},
+      );
+
+  /// Real-time stream of all task status updates.
+  _ida.Stream<_iz13ab3z.Task> subscribeToTaskUpdates() => caller
+      .callStreamingServerEndpoint<_ida.Stream<_iz13ab3z.Task>, _iz13ab3z.Task>(
+        'task',
+        'subscribeToTaskUpdates',
+        {},
+        {},
+      );
+
+  /// Real-time stream of audit events for a specific task.
+  _ida.Stream<_ixhio2rx.TaskEvent> subscribeToTaskEvents(int taskId) =>
+      caller.callStreamingServerEndpoint<
+        _ida.Stream<_ixhio2rx.TaskEvent>,
+        _ixhio2rx.TaskEvent
+      >(
+        'task',
+        'subscribeToTaskEvents',
+        {'taskId': taskId},
+        {},
+      );
+
+  /// Real-time stream of all system-wide audit events.
+  _ida.Stream<_ixhio2rx.TaskEvent> subscribeToAllEvents() =>
+      caller.callStreamingServerEndpoint<
+        _ida.Stream<_ixhio2rx.TaskEvent>,
+        _ixhio2rx.TaskEvent
+      >(
+        'task',
+        'subscribeToAllEvents',
+        {},
+        {},
+      );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -304,6 +513,8 @@ class Client extends _isc.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    location = EndpointLocation(this);
+    task = EndpointTask(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
@@ -311,6 +522,10 @@ class Client extends _isc.ServerpodClientShared {
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointLocation location;
+
+  late final EndpointTask task;
 
   late final EndpointGreeting greeting;
 
@@ -320,6 +535,8 @@ class Client extends _isc.ServerpodClientShared {
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'location': location,
+    'task': task,
     'greeting': greeting,
   };
 

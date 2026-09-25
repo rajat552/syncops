@@ -16,8 +16,18 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
+import 'package:synops_client/src/protocol/task.dart' as _iz13ab3z;
+import 'package:synops_client/src/protocol/task_event.dart' as _ixhio2rx;
+import 'dashboard_summary.dart' as _ijes90i9;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'location_ping.dart' as _i775ycu8;
+import 'task.dart' as _iwn6t6fs;
+import 'task_event.dart' as _io0tje1k;
+export 'dashboard_summary.dart';
 export 'greetings/greeting.dart';
+export 'location_ping.dart';
+export 'task.dart';
+export 'task_event.dart';
 export 'client.dart';
 
 class Protocol extends _isc.SerializationManager {
@@ -54,11 +64,46 @@ class Protocol extends _isc.SerializationManager {
       }
     }
 
+    if (t == _ijes90i9.DashboardSummary) {
+      return _ijes90i9.DashboardSummary.fromJson(data) as T;
+    }
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _i775ycu8.LocationPing) {
+      return _i775ycu8.LocationPing.fromJson(data) as T;
+    }
+    if (t == _iwn6t6fs.Task) {
+      return _iwn6t6fs.Task.fromJson(data) as T;
+    }
+    if (t == _io0tje1k.TaskEvent) {
+      return _io0tje1k.TaskEvent.fromJson(data) as T;
+    }
+    if (t == _isc.getType<_ijes90i9.DashboardSummary?>()) {
+      return (data != null ? _ijes90i9.DashboardSummary.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_i775ycu8.LocationPing?>()) {
+      return (data != null ? _i775ycu8.LocationPing.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iwn6t6fs.Task?>()) {
+      return (data != null ? _iwn6t6fs.Task.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_io0tje1k.TaskEvent?>()) {
+      return (data != null ? _io0tje1k.TaskEvent.fromJson(data) : null) as T;
+    }
+    if (t == List<_iz13ab3z.Task>) {
+      return (data as List).map((e) => deserialize<_iz13ab3z.Task>(e)).toList()
+          as T;
+    }
+    if (t == List<_ixhio2rx.TaskEvent>) {
+      return (data as List)
+              .map((e) => deserialize<_ixhio2rx.TaskEvent>(e))
+              .toList()
+          as T;
     }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
@@ -71,7 +116,11 @@ class Protocol extends _isc.SerializationManager {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
+      _ijes90i9.DashboardSummary => 'DashboardSummary',
       _izw8z7ou.Greeting => 'Greeting',
+      _i775ycu8.LocationPing => 'LocationPing',
+      _iwn6t6fs.Task => 'Task',
+      _io0tje1k.TaskEvent => 'TaskEvent',
       _ => null,
     };
   }
@@ -86,8 +135,16 @@ class Protocol extends _isc.SerializationManager {
     }
 
     switch (data) {
+      case _ijes90i9.DashboardSummary():
+        return 'DashboardSummary';
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _i775ycu8.LocationPing():
+        return 'LocationPing';
+      case _iwn6t6fs.Task():
+        return 'Task';
+      case _io0tje1k.TaskEvent():
+        return 'TaskEvent';
     }
     className = _iaic.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -110,8 +167,20 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'DashboardSummary') {
+      return deserialize<_ijes90i9.DashboardSummary>(data['data']);
+    }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'LocationPing') {
+      return deserialize<_i775ycu8.LocationPing>(data['data']);
+    }
+    if (dataClassName == 'Task') {
+      return deserialize<_iwn6t6fs.Task>(data['data']);
+    }
+    if (dataClassName == 'TaskEvent') {
+      return deserialize<_io0tje1k.TaskEvent>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);

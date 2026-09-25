@@ -1,0 +1,7 @@
+class: DashboardSummary
+fields:
+  activeIncidents: int
+  inResponse: int
+  needsAttention: int
+  completedToday: int
+  reassignedTotal: int

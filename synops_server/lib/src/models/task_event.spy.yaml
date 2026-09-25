@@ -1,0 +1,10 @@
+class: TaskEvent
+table: task_event
+fields:
+  taskId: int
+  actorId: int?
+  actorName: String?
+  type: String
+  message: String
+  timestamp: DateTime
+  metadata: String?

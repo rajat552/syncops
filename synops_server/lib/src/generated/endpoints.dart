@@ -15,9 +15,14 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import 'package:synops_server/src/generated/future_calls.dart' as _iw5h3zzg;
+import 'package:synops_server/src/generated/location_ping.dart' as _ie0ms72o;
 import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
+import '../endpoints/location_endpoint.dart' as _iu1rtxjg;
+import '../endpoints/task_endpoint.dart' as _idmllfay;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
+export 'future_calls.dart' show ServerpodFutureCallsGetter;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -33,6 +38,18 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'jwtRefresh',
+          null,
+        ),
+      'location': _iu1rtxjg.LocationEndpoint()
+        ..initialize(
+          server,
+          'location',
+          null,
+        ),
+      'task': _idmllfay.TaskEndpoint()
+        ..initialize(
+          server,
+          'task',
           null,
         ),
       'greeting': _il624ik7.GreetingEndpoint()
@@ -248,6 +265,372 @@ class Endpoints extends _is.EndpointDispatch {
         ),
       },
     );
+    connectors['location'] = _is.EndpointConnector(
+      name: 'location',
+      endpoint: endpoints['location']!,
+      methodConnectors: {
+        'sendLocationPing': _is.MethodConnector(
+          name: 'sendLocationPing',
+          params: {
+            'ping': _is.ParameterDescription(
+              name: 'ping',
+              type: _is.getType<_ie0ms72o.LocationPing>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['location'] as _iu1rtxjg.LocationEndpoint)
+                  .sendLocationPing(
+                    session,
+                    params['ping'],
+                  ),
+        ),
+        'subscribeToTaskLocation': _is.MethodStreamConnector(
+          name: 'subscribeToTaskLocation',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _is.MethodStreamReturnType.streamType,
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['location'] as _iu1rtxjg.LocationEndpoint)
+                  .subscribeToTaskLocation(
+                    session,
+                    params['taskId'],
+                  ),
+        ),
+        'subscribeToAllLocations': _is.MethodStreamConnector(
+          name: 'subscribeToAllLocations',
+          params: {},
+          streamParams: {},
+          returnType: _is.MethodStreamReturnType.streamType,
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['location'] as _iu1rtxjg.LocationEndpoint)
+                  .subscribeToAllLocations(session),
+        ),
+      },
+    );
+    connectors['task'] = _is.EndpointConnector(
+      name: 'task',
+      endpoint: endpoints['task']!,
+      methodConnectors: {
+        'createTask': _is.MethodConnector(
+          name: 'createTask',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'latitude': _is.ParameterDescription(
+              name: 'latitude',
+              type: _is.getType<double>(),
+              nullable: false,
+            ),
+            'longitude': _is.ParameterDescription(
+              name: 'longitude',
+              type: _is.getType<double>(),
+              nullable: false,
+            ),
+            'severity': _is.ParameterDescription(
+              name: 'severity',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'createdById': _is.ParameterDescription(
+              name: 'createdById',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'requiredSkill': _is.ParameterDescription(
+              name: 'requiredSkill',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'timeoutSeconds': _is.ParameterDescription(
+              name: 'timeoutSeconds',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['task'] as _idmllfay.TaskEndpoint).createTask(
+                    session,
+                    title: params['title'],
+                    description: params['description'],
+                    latitude: params['latitude'],
+                    longitude: params['longitude'],
+                    severity: params['severity'],
+                    createdById: params['createdById'],
+                    requiredSkill: params['requiredSkill'],
+                    timeoutSeconds: params['timeoutSeconds'],
+                  ),
+        ),
+        'getAllTasks': _is.MethodConnector(
+          name: 'getAllTasks',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .getAllTasks(session),
+        ),
+        'getTask': _is.MethodConnector(
+          name: 'getTask',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['task'] as _idmllfay.TaskEndpoint).getTask(
+                session,
+                params['taskId'],
+              ),
+        ),
+        'getOpenTasks': _is.MethodConnector(
+          name: 'getOpenTasks',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .getOpenTasks(session),
+        ),
+        'acceptTask': _is.MethodConnector(
+          name: 'acceptTask',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'responderId': _is.ParameterDescription(
+              name: 'responderId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'responderName': _is.ParameterDescription(
+              name: 'responderName',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'timeoutSeconds': _is.ParameterDescription(
+              name: 'timeoutSeconds',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['task'] as _idmllfay.TaskEndpoint).acceptTask(
+                    session,
+                    taskId: params['taskId'],
+                    responderId: params['responderId'],
+                    responderName: params['responderName'],
+                    timeoutSeconds: params['timeoutSeconds'],
+                  ),
+        ),
+        'updateTaskStatus': _is.MethodConnector(
+          name: 'updateTaskStatus',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'responderId': _is.ParameterDescription(
+              name: 'responderId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'newStatus': _is.ParameterDescription(
+              name: 'newStatus',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'timeoutSeconds': _is.ParameterDescription(
+              name: 'timeoutSeconds',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .updateTaskStatus(
+                    session,
+                    taskId: params['taskId'],
+                    responderId: params['responderId'],
+                    newStatus: params['newStatus'],
+                    timeoutSeconds: params['timeoutSeconds'],
+                  ),
+        ),
+        'releaseTask': _is.MethodConnector(
+          name: 'releaseTask',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'responderId': _is.ParameterDescription(
+              name: 'responderId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'reason': _is.ParameterDescription(
+              name: 'reason',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['task'] as _idmllfay.TaskEndpoint).releaseTask(
+                    session,
+                    taskId: params['taskId'],
+                    responderId: params['responderId'],
+                    reason: params['reason'],
+                  ),
+        ),
+        'triggerSimulatedTimeout': _is.MethodConnector(
+          name: 'triggerSimulatedTimeout',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .triggerSimulatedTimeout(
+                    session,
+                    taskId: params['taskId'],
+                  ),
+        ),
+        'getTaskTimeline': _is.MethodConnector(
+          name: 'getTaskTimeline',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['task'] as _idmllfay.TaskEndpoint).getTaskTimeline(
+                    session,
+                    params['taskId'],
+                  ),
+        ),
+        'getDashboardSummary': _is.MethodConnector(
+          name: 'getDashboardSummary',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .getDashboardSummary(session),
+        ),
+        'subscribeToTaskUpdates': _is.MethodStreamConnector(
+          name: 'subscribeToTaskUpdates',
+          params: {},
+          streamParams: {},
+          returnType: _is.MethodStreamReturnType.streamType,
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .subscribeToTaskUpdates(session),
+        ),
+        'subscribeToTaskEvents': _is.MethodStreamConnector(
+          name: 'subscribeToTaskEvents',
+          params: {
+            'taskId': _is.ParameterDescription(
+              name: 'taskId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _is.MethodStreamReturnType.streamType,
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .subscribeToTaskEvents(
+                    session,
+                    params['taskId'],
+                  ),
+        ),
+        'subscribeToAllEvents': _is.MethodStreamConnector(
+          name: 'subscribeToAllEvents',
+          params: {},
+          streamParams: {},
+          returnType: _is.MethodStreamReturnType.streamType,
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['task'] as _idmllfay.TaskEndpoint)
+                  .subscribeToAllEvents(session),
+        ),
+      },
+    );
     connectors['greeting'] = _is.EndpointConnector(
       name: 'greeting',
       endpoint: endpoints['greeting']!,
@@ -277,5 +660,10 @@ class Endpoints extends _is.EndpointDispatch {
       ..initializeEndpoints(server);
     modules['serverpod_auth_core'] = _iacs.Endpoints()
       ..initializeEndpoints(server);
+  }
+
+  @override
+  _is.FutureCallDispatch? get futureCalls {
+    return _iw5h3zzg.FutureCalls();
   }
 }
