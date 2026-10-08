@@ -142,7 +142,7 @@ class IncidentTimelineWidget extends StatelessWidget {
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 13,
                           color: isRecovery
-                              ? Colors.white
+                              ? SyncOpsTheme.textPrimary
                               : SyncOpsTheme.textPrimary,
                           fontWeight: isRecovery
                               ? FontWeight.w600

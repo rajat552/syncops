@@ -59,7 +59,7 @@ class _DemoControllerSheetState extends State<DemoControllerSheet> {
                           style: GoogleFonts.jetBrainsMono(
                             fontSize: 13,
                             fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            color: SyncOpsTheme.textPrimary,
                           ),
                         ),
                         Text(
@@ -277,13 +277,13 @@ class _DemoControllerSheetState extends State<DemoControllerSheet> {
             ),
             child: Center(
               child: isCompleted
-                  ? const Icon(Icons.check, size: 16, color: Colors.white)
+                  ? const Icon(Icons.check, size: 16, color: SyncOpsTheme.textPrimary)
                   : Text(
                       stepNumber.toString(),
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                        color: SyncOpsTheme.textPrimary,
                       ),
                     ),
             ),
@@ -318,7 +318,7 @@ class _DemoControllerSheetState extends State<DemoControllerSheet> {
             onPressed: (_isBusy || onPressed == null) ? null : onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: buttonColor,
-              foregroundColor: Colors.white,
+              foregroundColor: SyncOpsTheme.textPrimary,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             ),
             child: Text(

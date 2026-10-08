@@ -112,7 +112,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color: SyncOpsTheme.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -310,7 +310,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
         onPressed: _isProcessing ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
-          foregroundColor: Colors.white,
+          foregroundColor: SyncOpsTheme.textPrimary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -321,7 +321,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
                 height: 18,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color: SyncOpsTheme.textPrimary,
                 ),
               )
             : Icon(icon, size: 20),
@@ -363,7 +363,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color: SyncOpsTheme.textPrimary,
                     ),
                   ),
                 ],
@@ -395,7 +395,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: SyncOpsTheme.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -464,7 +464,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: SyncOpsTheme.textPrimary,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -599,7 +599,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
               const SizedBox(height: 12),
               TextField(
                 controller: reasonController,
-                style: GoogleFonts.plusJakartaSans(color: Colors.white),
+                style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
                 decoration: const InputDecoration(
                   labelText: 'Reason for Release',
                   filled: true,

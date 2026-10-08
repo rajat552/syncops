@@ -108,7 +108,7 @@ class _SyncOpsShellState extends State<SyncOpsShell> {
               style: GoogleFonts.jetBrainsMono(
                 fontSize: 14,
                 fontWeight: FontWeight.w900,
-                color: Colors.white,
+                color: Colors.white, // Keep badge text white
                 letterSpacing: 1.2,
               ),
             ),
@@ -121,10 +121,10 @@ class _SyncOpsShellState extends State<SyncOpsShell> {
               children: [
                 Text(
                   'Emergency Operations Center',
-                  style: GoogleFonts.plusJakartaSans(
+                  style: GoogleFonts.nunito(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    color: SyncOpsTheme.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -174,9 +174,10 @@ class _SyncOpsShellState extends State<SyncOpsShell> {
             child: DropdownButton<SyncOpsRole>(
               value: _service.currentRole,
               dropdownColor: SyncOpsTheme.surfaceElevated,
-              style: GoogleFonts.plusJakartaSans(
+              style: GoogleFonts.nunito(
                 fontSize: 12,
-                color: Colors.white,
+                color: SyncOpsTheme.textPrimary,
+                fontWeight: FontWeight.w600,
               ),
               icon: const Icon(
                 Icons.arrow_drop_down,
@@ -294,10 +295,10 @@ class _GlobalAuditFeedScreen extends StatelessWidget {
                         ),
                         Text(
                           'Real-Time Serverpod Event Stream',
-                          style: GoogleFonts.plusJakartaSans(
+                          style: GoogleFonts.nunito(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            color: SyncOpsTheme.textPrimary,
                           ),
                         ),
                       ],
@@ -366,12 +367,12 @@ class _GlobalAuditFeedScreen extends StatelessWidget {
                                 ),
                                 title: Text(
                                   event.message,
-                                  style: GoogleFonts.plusJakartaSans(
+                                  style: GoogleFonts.nunito(
                                     fontSize: 13,
                                     fontWeight: isRecovery
                                         ? FontWeight.w700
-                                        : FontWeight.w500,
-                                    color: Colors.white,
+                                        : FontWeight.w600,
+                                    color: SyncOpsTheme.textPrimary,
                                   ),
                                 ),
                                 subtitle: Text(

@@ -67,12 +67,12 @@ class _CoordinatorScreenState extends State<CoordinatorScreen> {
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _showCreateIncidentDialog(context),
             backgroundColor: SyncOpsTheme.criticalRed,
-            icon: const Icon(Icons.add_alert_rounded, color: Colors.white),
+            icon: const Icon(Icons.add_alert_rounded, color: SyncOpsTheme.textPrimary),
             label: Text(
               'DISPATCH INCIDENT',
               style: GoogleFonts.plusJakartaSans(
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: SyncOpsTheme.textPrimary,
                 letterSpacing: 0.5,
               ),
             ),
@@ -164,11 +164,18 @@ class _CoordinatorScreenState extends State<CoordinatorScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: SyncOpsTheme.surfaceElevated.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(8),
+          color: SyncOpsTheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0x33000000),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            )
+          ],
           border: Border.all(
-            color: SyncOpsTheme.border.withOpacity(0.6),
-            width: 1,
+            color: SyncOpsTheme.border,
+            width: 2,
           ),
         ),
         child: Column(
@@ -463,7 +470,7 @@ class _CoordinatorScreenState extends State<CoordinatorScreen> {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: SyncOpsTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 6),
@@ -542,7 +549,7 @@ class _CoordinatorScreenState extends State<CoordinatorScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: SyncOpsTheme.criticalRed,
-                      foregroundColor: Colors.white,
+                      foregroundColor: SyncOpsTheme.textPrimary,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 8,
@@ -722,7 +729,7 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
                     label: Text(p['title'] as String),
                     labelStyle: GoogleFonts.plusJakartaSans(
                       fontSize: 11,
-                      color: Colors.white,
+                      color: SyncOpsTheme.textPrimary,
                     ),
                     backgroundColor: SyncOpsTheme.surfaceElevated,
                     onPressed: () {
@@ -739,7 +746,7 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
               const SizedBox(height: 16),
               TextField(
                 controller: _titleController,
-                style: GoogleFonts.plusJakartaSans(color: Colors.white),
+                style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
                 decoration: const InputDecoration(
                   labelText: 'Incident Title',
                   filled: true,
@@ -751,7 +758,7 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
               TextField(
                 controller: _descController,
                 maxLines: 2,
-                style: GoogleFonts.plusJakartaSans(color: Colors.white),
+                style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
                 decoration: const InputDecoration(
                   labelText: 'Mission Description',
                   filled: true,
@@ -766,7 +773,7 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
                     child: DropdownButtonFormField<String>(
                       value: _severity,
                       dropdownColor: SyncOpsTheme.surfaceElevated,
-                      style: GoogleFonts.plusJakartaSans(color: Colors.white),
+                      style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
                       decoration: const InputDecoration(
                         labelText: 'Severity',
                         filled: true,
@@ -793,7 +800,7 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
                   Expanded(
                     child: TextFormField(
                       initialValue: _timeoutSeconds.toString(),
-                      style: GoogleFonts.plusJakartaSans(color: Colors.white),
+                      style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
                       decoration: const InputDecoration(
                         labelText: 'Timeout Window (s)',
                         filled: true,
@@ -851,7 +858,7 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
                 },
           style: ElevatedButton.styleFrom(
             backgroundColor: SyncOpsTheme.criticalRed,
-            foregroundColor: Colors.white,
+            foregroundColor: SyncOpsTheme.textPrimary,
           ),
           child: _isCreating
               ? const SizedBox(
@@ -859,7 +866,7 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white,
+                    color: SyncOpsTheme.textPrimary,
                   ),
                 )
               : Text(

@@ -62,3 +62,5 @@ serverpod:
       displayName: "Synops app"
       auto_launch: true
       target: lib/driver.dart
+      dart-define:
+        SERVER_URL=http://localhost:8085/
