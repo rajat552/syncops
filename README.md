@@ -9,26 +9,37 @@
 
 SyncOps is a state-of-the-art **Emergency Dispatch and Automated Recovery Platform** engineered for high-stakes field response operations. Built with Serverpod and Flutter, SyncOps eliminates the most dangerous failure mode in emergency management: **the silent abandonment gap**—when a field responder claims a critical mission but goes radio-silent due to equipment failure or danger.
 
-With a beautiful, modern **"PawSpa"** light-themed UI, SyncOps provides dispatchers with an incredibly crisp and professional operations center to monitor live telemetry, while background systems handle automated failover.
-
 ---
 
 ## 📸 Platform Previews
 
-### Coordinator Dashboard & Live Radar
-*(Add your screenshot here: `docs/images/coordinator_dashboard.png`)*
+### 1. Coordinator Dashboard — Emergency Operations Center
 ![Coordinator Dashboard](docs/images/coordinator_dashboard.png)
-*The main command center where dispatchers can view real-time KPIs, active incidents, and live GPS radar of responders in the field.*
+*The main command center: Real-time KPI metrics (Active Incidents, In Response, Needs Attention, Reassigned, Completed), live incident feed with severity badges, and a tactical GPS radar monitor for tracking responders in the field.*
 
-### Dispatch Incident & Timeout Window
-*(Add your screenshot here: `docs/images/dispatch_modal.png`)*
+---
+
+### 2. Dispatch Emergency Incident
 ![Dispatch Incident](docs/images/dispatch_modal.png)
-*Dispatchers can quickly trigger pre-set emergency scenarios or create custom missions with strict Timeout Windows.*
+*Dispatchers can instantly load pre-set hackathon demo scenarios (Trauma Supply Delivery, Search & Rescue, Substation Cooling Failure) or create custom incidents with custom Severity and Timeout Window.*
 
-### Responder Terminal
-*(Add your screenshot here: `docs/images/responder_terminal.png`)*
+---
+
+### 3. Field Responder Terminal
 ![Responder Terminal](docs/images/responder_terminal.png)
-*A mobile-optimized, one-touch interface for field workers to claim tasks, report status, and automatically stream telemetry back to base.*
+*The field responder's one-touch interface — showing the live tactical radar, auto-recovery countdown timer, and live GPS telemetry stream. The responder can start their response, transmit GPS pings, and progress through the mission.*
+
+---
+
+### 4. Live Server Logs — Auto-Recovery in Action
+![Server Logs](docs/images/server_logs.png)
+*Real Serverpod server logs showing GPS pings arriving every 2-3 seconds, the `TaskTimeoutCall` Future Call firing, and the critical log line: **"Task #6 automatically recovered and reopened (Reassignment #1)."** — the heart of SyncOps.*
+
+---
+
+### 5. Synops App Runtime Logs
+![App Logs](docs/images/synops_app_logs.png)
+*The Serverpod development console showing the Flutter app successfully launched on the web server, with the Dart DevTools debugger and Flutter profiler available for deep inspection.*
 
 ---
 
@@ -77,11 +88,7 @@ serverpod start
 - Automatically watches file changes, runs code generation, and hot-reloads the Flutter client.
 
 ### 2. View the App
-If the Flutter app doesn't automatically open, navigate to:
-```
-http://localhost:64716
-```
-*(Check your terminal for the exact local Flutter dev server port).*
+The Flutter web app launches automatically in the browser. If it doesn't, check your terminal for the local port (e.g., `http://localhost:56507`).
 
 ### 3. Run the Automated Tests
 
