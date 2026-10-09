@@ -277,7 +277,11 @@ class _DemoControllerSheetState extends State<DemoControllerSheet> {
             ),
             child: Center(
               child: isCompleted
-                  ? const Icon(Icons.check, size: 16, color: SyncOpsTheme.textPrimary)
+                  ? const Icon(
+                      Icons.check,
+                      size: 16,
+                      color: SyncOpsTheme.textPrimary,
+                    )
                   : Text(
                       stepNumber.toString(),
                       style: GoogleFonts.jetBrainsMono(

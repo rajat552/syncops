@@ -2,27 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SyncOpsTheme {
-  // Deep military/space ops tactical palette -> Converted to PawSpa light warm theme
-  static const Color background = Color(0xFFFFF7F2); // Soft peach
+  // SyncOps warm light theme — "Operations Center Daylight" palette.
+  // Readable on standard monitors in bright field environments.
+  static const Color background = Color(0xFFFFF7F2); // Soft warm white
   static const Color surface = Color(0xFFFFFFFF); // White cards
-  static const Color surfaceElevated = Color(0xFFFFF0E6);
-  static const Color surfaceHighlight = Color(0xFFFFE5D4);
-  static const Color border = Color(0xFFDCA685); // Darker border
-  static const Color borderBright = Color(0xFFF4C5A8);
+  static const Color surfaceElevated = Color(0xFFFFF0E6); // Warm elevated card
+  static const Color surfaceHighlight = Color(0xFFFFE5D4); // Warm highlight
+  static const Color border = Color(0xFFDCA685); // Warm amber border
+  static const Color borderBright = Color(0xFFF4C5A8); // Light border
 
-  // Status & accent colors
-  static const Color primaryCyan = Color(0xFFF9944F); // Actually Orange
-  static const Color accentBlue = Color(0xFF26B6B5); // Teal
-  static const Color criticalRed = Color(0xFFFF7582); // Pinkish coral
-  static const Color alertOrange = Color(0xFFF9944F);
-  static const Color warningAmber = Color(0xFFFFB84D);
-  static const Color successGreen = Color(0xFF4ADE80);
-  static const Color purpleNeon = Color(0xFFB485FF);
+  // Semantic accent colors — named after their actual visual appearance
+  /// Primary brand orange — used for interactive elements, highlights, FABs.
+  static const Color primaryCyan = Color(
+    0xFFF9944F,
+  ); // Orange (legacy name kept for compatibility)
+  static const Color primaryOrange = Color(
+    0xFFF9944F,
+  ); // Orange — primary brand color
+  static const Color accentTeal = Color(0xFF26B6B5); // Teal — "en-route" status
+  static const Color accentBlue = Color(
+    0xFF26B6B5,
+  ); // alias for accentTeal (legacy)
+  static const Color emergencyRed = Color(
+    0xFFFF7582,
+  ); // Coral-red — critical/expired states
+  static const Color criticalRed = Color(
+    0xFFFF7582,
+  ); // alias for emergencyRed (legacy)
+  static const Color alertOrange = Color(
+    0xFFF9944F,
+  ); // Orange — alert/accepted state
+  static const Color warningAmber = Color(
+    0xFFFFB84D,
+  ); // Amber — pending/medium severity
+  static const Color successGreen = Color(
+    0xFF4ADE80,
+  ); // Green — completed/arrived
+  static const Color purpleNeon = Color(
+    0xFFB485FF,
+  ); // Purple — "arrived" status
 
-  // Text colors
-  static const Color textPrimary = Color(0xFF2D3748); // Dark slate
-  static const Color textSecondary = Color(0xFF718096); // Gray
-  static const Color textMuted = Color(0xFFA0AEC0); // Light gray
+  // Text hierarchy
+  static const Color textPrimary = Color(0xFF2D3748); // Dark slate — headings
+  static const Color textSecondary = Color(0xFF718096); // Medium gray — body
+  static const Color textMuted = Color(
+    0xFFA0AEC0,
+  ); // Light gray — labels/metadata
 
   static ThemeData get themeData {
     return ThemeData(
@@ -78,7 +103,9 @@ class SyncOpsTheme {
       cardTheme: CardThemeData(
         color: surface,
         elevation: 8,
-        shadowColor: const Color(0x33000000), // 20% opacity for better visibility
+        shadowColor: const Color(
+          0x33000000,
+        ), // 20% opacity for better visibility
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: const BorderSide(color: border, width: 2),
@@ -93,6 +120,21 @@ class SyncOpsTheme {
           fontSize: 18,
           fontWeight: FontWeight.w800,
           color: textPrimary,
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryCyan,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: textSecondary,
         ),
       ),
     );

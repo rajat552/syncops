@@ -6,6 +6,7 @@ import '../core/theme.dart';
 import '../services/syncops_service.dart';
 import '../widgets/countdown_timer_view.dart';
 import '../widgets/incident_timeline_widget.dart';
+import '../widgets/loading_and_empty_states.dart';
 import '../widgets/status_badge.dart';
 import '../widgets/tactical_map_view.dart';
 
@@ -67,7 +68,10 @@ class _CoordinatorScreenState extends State<CoordinatorScreen> {
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _showCreateIncidentDialog(context),
             backgroundColor: SyncOpsTheme.criticalRed,
-            icon: const Icon(Icons.add_alert_rounded, color: SyncOpsTheme.textPrimary),
+            icon: const Icon(
+              Icons.add_alert_rounded,
+              color: SyncOpsTheme.textPrimary,
+            ),
             label: Text(
               'DISPATCH INCIDENT',
               style: GoogleFonts.plusJakartaSans(
@@ -171,7 +175,7 @@ class _CoordinatorScreenState extends State<CoordinatorScreen> {
               color: const Color(0x33000000),
               blurRadius: 10,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
           border: Border.all(
             color: SyncOpsTheme.border,
@@ -278,30 +282,22 @@ class _CoordinatorScreenState extends State<CoordinatorScreen> {
   }
 
   Widget _buildTaskList(List<Task> tasks) {
+    // Show shimmer while initial data is loading
+    if (_service.isLoading && _service.tasks.isEmpty) {
+      return ListView(
+        padding: const EdgeInsets.all(12),
+        children: const [
+          TaskCardShimmer(),
+          TaskCardShimmer(),
+          TaskCardShimmer(),
+        ],
+      );
+    }
+
     if (tasks.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.inbox_outlined, size: 48, color: SyncOpsTheme.textMuted),
-            const SizedBox(height: 12),
-            Text(
-              'No incidents found matching filter',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 16,
-                color: SyncOpsTheme.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Click "DISPATCH INCIDENT" to create a new critical mission.',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 13,
-                color: SyncOpsTheme.textMuted,
-              ),
-            ),
-          ],
-        ),
+      return EmptyTaskState(
+        filter: _filter,
+        onCreateIncident: () => _showCreateIncidentDialog(context),
       );
     }
 
@@ -746,7 +742,9 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
               const SizedBox(height: 16),
               TextField(
                 controller: _titleController,
-                style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
+                style: GoogleFonts.plusJakartaSans(
+                  color: SyncOpsTheme.textPrimary,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Incident Title',
                   filled: true,
@@ -758,7 +756,9 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
               TextField(
                 controller: _descController,
                 maxLines: 2,
-                style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
+                style: GoogleFonts.plusJakartaSans(
+                  color: SyncOpsTheme.textPrimary,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Mission Description',
                   filled: true,
@@ -773,7 +773,9 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
                     child: DropdownButtonFormField<String>(
                       value: _severity,
                       dropdownColor: SyncOpsTheme.surfaceElevated,
-                      style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
+                      style: GoogleFonts.plusJakartaSans(
+                        color: SyncOpsTheme.textPrimary,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Severity',
                         filled: true,
@@ -800,7 +802,9 @@ class _CreateIncidentDialogState extends State<_CreateIncidentDialog> {
                   Expanded(
                     child: TextFormField(
                       initialValue: _timeoutSeconds.toString(),
-                      style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
+                      style: GoogleFonts.plusJakartaSans(
+                        color: SyncOpsTheme.textPrimary,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Timeout Window (s)',
                         filled: true,

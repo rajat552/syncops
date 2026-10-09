@@ -45,15 +45,50 @@ SyncOps is a state-of-the-art **Emergency Dispatch and Automated Recovery Platfo
 
 ## ⚡ Key Architectural Highlights
 
-- **Serverpod 4 Backend**: Full typed RPC endpoints, ORM persistence, and real-time event pub/sub.
-- **Automated Failover (`TaskTimeoutCall`)**: Uses Serverpod Future Calls to act as a scheduled background worker. It strictly enforces deadlines and immediately recovers and re-queues tasks if a responder loses connection.
-- **Transient Real-Time WebSockets**: High-frequency GPS telemetry is streamed directly over WebSockets (`location_pings_$taskId`) for instant map updates without overwhelming the PostgreSQL database.
-- **Atomic Concurrency Checks**: Server-side validation guarantees that two responders can never claim the same emergency task simultaneously.
-- **Immutable Audit Trail**: Every status change (Accepted, En Route, Completed, or Recovered) is permanently logged in a `task_event` table for post-incident review.
+| Layer | Technology | Role |
+|-------|-----------|------|
+| **Frontend** | Flutter (Web/Mobile) | Coordinator Dashboard, Responder Terminal, Hero Demo |
+| **RPC Transport** | Serverpod 4 typed endpoints | Type-safe client-server calls with auto-generated client |
+| **Real-Time Events** | Serverpod WebSocket Streams | `task_updates`, `task_events_*`, `location_pings_*` channels |
+| **Auto-Recovery Engine** | Serverpod `FutureCall` | Scheduled background timeout verification & re-queue |
+| **Persistence** | PostgreSQL + Serverpod ORM | Immutable `task_event` audit trail, task state |
+| **Concurrency Guard** | Atomic DB read-then-write | Prevents two responders claiming the same task |
+
+### System Component Diagram
+
+```mermaid
+graph LR
+    subgraph Flutter App
+        C[Coordinator Dashboard]
+        R[Responder Terminal]
+        A[Audit Log Feed]
+        DS[DemoControllerSheet\nHero Walkthrough]
+        SVC[SyncOpsService\nChangeNotifier]
+    end
+
+    subgraph Serverpod Backend
+        TE[TaskEndpoint\nFull CRUD + State Machine]
+        LE[LocationEndpoint\nGPS Telemetry Streaming]
+        TC[TaskTimeoutCall\nFutureCall Worker]
+        MSG[Message Bus\nPub/Sub Channels]
+        DB[(PostgreSQL\ntask + task_event)]
+    end
+
+    C & R & A --> SVC
+    SVC -->|RPC| TE & LE
+    TE --> DB
+    TE --> MSG
+    LE --> MSG
+    TC --> DB
+    TC --> MSG
+    MSG -->|WS Stream| SVC
+```
 
 ---
 
 ## 🔄 The SyncOps Auto-Recovery Workflow
+
+### High-Level Flow
 
 ```mermaid
 graph TD
@@ -67,6 +102,47 @@ graph TD
     G -->|Broadcasts to Queue| B
     
     C -->|Completes Mission| H((Mission Completed Successfully))
+```
+
+### Detailed Sequence — Auto-Recovery in Action
+
+```mermaid
+sequenceDiagram
+    participant C as Coordinator App
+    participant B as Serverpod Backend
+    participant DB as PostgreSQL
+    participant FC as FutureCall Worker
+    participant R1 as Responder A
+    participant R2 as Responder B
+
+    C->>B: createTask(severity=CRITICAL, timeout=45s)
+    B->>DB: INSERT task (status=PENDING)
+    B-->>C: Task broadcasted via task_updates stream
+
+    R1->>B: acceptTask(taskId, responderId)
+    B->>DB: UPDATE task (status=ACCEPTED, expiresAt=now+45s)
+    B->>FC: scheduleTimeout("task-timeout-N", delay=45s)
+    B-->>R1: Task accepted, countdown starts
+
+    loop Every 3s
+        R1->>B: sendLocationPing(lat, lng)
+        B->>DB: UPDATE task.expiresAt = now+45s
+        B->>FC: rescheduleTimeout (reset clock)
+        B-->>C: location_pings_all broadcast
+    end
+
+    Note over R1,FC: Responder goes silent — no more pings
+    FC->>B: handleTimeout(taskId) fires
+    B->>DB: READ task — expiresAt passed, status=EN_ROUTE
+    B->>DB: UPDATE task (status=PENDING, assignedTo=NULL, reassignmentCount++)
+    B->>DB: INSERT task_event (type=TIMEOUT_AUTO_RECOVERED)
+    B-->>C: Task re-broadcasted via task_updates
+    B-->>R2: Task visible in dispatch queue
+
+    R2->>B: acceptTask(taskId, responderId=202)
+    R2->>B: updateStatus → EN_ROUTE → ARRIVED → IN_PROGRESS → COMPLETED
+    B->>DB: UPDATE task (status=COMPLETED, completedAt=now)
+    B->>FC: cancelTimeout("task-timeout-N")
 ```
 
 ---

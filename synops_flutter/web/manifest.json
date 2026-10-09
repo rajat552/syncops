@@ -1,12 +1,12 @@
 {
-    "name": "synops_flutter",
-    "short_name": "synops_flutter",
+    "name": "SyncOps — Emergency Operations Center",
+    "short_name": "SyncOps",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#FFF7F2",
+    "theme_color": "#F9944F",
+    "description": "Real-time emergency task coordination with automated responder timeout detection and task recovery powered by Serverpod 4.",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

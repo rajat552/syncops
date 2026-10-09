@@ -7,6 +7,7 @@ import 'screens/coordinator_screen.dart';
 import 'screens/demo_controller_sheet.dart';
 import 'screens/responder_screen.dart';
 import 'services/syncops_service.dart';
+import 'widgets/connection_status_banner.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,12 +48,19 @@ class _SyncOpsShellState extends State<SyncOpsShell> {
       builder: (context, _) {
         return Scaffold(
           appBar: _buildTopAppBar(context),
-          body: IndexedStack(
-            index: _currentTabIndex,
-            children: const [
-              CoordinatorScreen(),
-              ResponderScreen(),
-              _GlobalAuditFeedScreen(),
+          body: Column(
+            children: [
+              const ConnectionStatusBanner(),
+              Expanded(
+                child: IndexedStack(
+                  index: _currentTabIndex,
+                  children: const [
+                    CoordinatorScreen(),
+                    ResponderScreen(),
+                    _GlobalAuditFeedScreen(),
+                  ],
+                ),
+              ),
             ],
           ),
           bottomNavigationBar: Container(

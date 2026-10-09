@@ -15,7 +15,9 @@ class TaskTimeoutCall extends FutureCall {
     }
 
     // Only recover if still in an active uncompleted state
-    final activeStatuses = {'ACCEPTED', 'EN_ROUTE', 'IN_PROGRESS'};
+    // IMPORTANT: ARRIVED must be included — a responder who goes silent at the
+    // scene is just as dangerous as one lost en-route.
+    final activeStatuses = {'ACCEPTED', 'EN_ROUTE', 'ARRIVED', 'IN_PROGRESS'};
     if (!activeStatuses.contains(task.status)) {
       session.log(
         'Task #$taskId status is "${task.status}". No timeout recovery needed.',

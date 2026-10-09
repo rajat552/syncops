@@ -4,6 +4,23 @@ import 'package:synops_server/src/generated/future_calls.dart';
 import 'package:synops_server/src/generated/protocol.dart';
 
 class TaskEndpoint extends Endpoint {
+  static const _validSeverities = {'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'};
+  static const _validSkills = {
+    'HAZMAT_PARAMEDIC',
+    'SEARCH_RESCUE',
+    'INFRASTRUCTURE',
+    'GENERAL_RESPONSE',
+    'MEDICAL',
+    'FIRE_SUPPRESSION',
+  };
+  static const _validStatuses = {
+    'EN_ROUTE',
+    'ARRIVED',
+    'IN_PROGRESS',
+    'COMPLETED',
+    'RELEASED',
+  };
+
   /// Creates a new emergency task/incident.
   Future<Task> createTask(
     Session session, {
@@ -16,6 +33,17 @@ class TaskEndpoint extends Endpoint {
     String? requiredSkill,
     int timeoutSeconds = 60,
   }) async {
+    final severityUpper = severity.toUpperCase();
+    if (!_validSeverities.contains(severityUpper)) {
+      throw ArgumentError(
+        'Invalid severity "$severity". Must be one of: ${_validSeverities.join(", ")}.',
+      );
+    }
+    if (requiredSkill != null && !_validSkills.contains(requiredSkill)) {
+      throw ArgumentError(
+        'Invalid requiredSkill "$requiredSkill". Must be one of: ${_validSkills.join(", ")}.',
+      );
+    }
     final now = DateTime.now().toUtc();
 
     final task = Task(
@@ -23,7 +51,7 @@ class TaskEndpoint extends Endpoint {
       description: description.trim(),
       latitude: latitude,
       longitude: longitude,
-      severity: severity.toUpperCase(),
+      severity: severityUpper,
       status: 'PENDING',
       createdById: createdById,
       createdAt: now,
@@ -159,6 +187,11 @@ class TaskEndpoint extends Endpoint {
     required String newStatus,
     int timeoutSeconds = 60,
   }) async {
+    if (!_validStatuses.contains(newStatus)) {
+      throw ArgumentError(
+        'Invalid status "$newStatus". Must be one of: ${_validStatuses.join(", ")}.',
+      );
+    }
     final task = await Task.db.findById(session, taskId);
     if (task == null) {
       throw ArgumentError('Task #$taskId not found.');

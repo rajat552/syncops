@@ -289,4 +289,108 @@ void main() {
       );
     },
   );
+
+  withServerpod(
+    'Given Task Endpoint Input Validation',
+    rollbackDatabase: RollbackDatabase.disabled,
+    (sessionBuilder, endpoints) {
+      test('Rejects task creation with invalid severity', () async {
+        expect(
+          () async => await endpoints.task.createTask(
+            sessionBuilder,
+            title: 'Test Incident',
+            description: 'Test description',
+            latitude: 37.7749,
+            longitude: -122.4194,
+            severity: 'BANANA', // Invalid
+            createdById: 101,
+            timeoutSeconds: 60,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      });
+
+      test('Rejects task creation with invalid requiredSkill', () async {
+        expect(
+          () async => await endpoints.task.createTask(
+            sessionBuilder,
+            title: 'Test Incident',
+            description: 'Test description',
+            latitude: 37.7749,
+            longitude: -122.4194,
+            severity: 'HIGH',
+            createdById: 101,
+            requiredSkill: 'UNKNOWN_SKILL_XYZ', // Invalid
+            timeoutSeconds: 60,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      });
+
+      test('Rejects updateTaskStatus with completely invalid status', () async {
+        final task = await endpoints.task.createTask(
+          sessionBuilder,
+          title: 'Validation Test Task',
+          description: 'Testing status validation',
+          latitude: 37.7749,
+          longitude: -122.4194,
+          severity: 'MEDIUM',
+          createdById: 101,
+          timeoutSeconds: 60,
+        );
+
+        await endpoints.task.acceptTask(
+          sessionBuilder,
+          taskId: task.id!,
+          responderId: 201,
+          responderName: 'Test Responder',
+          timeoutSeconds: 60,
+        );
+
+        expect(
+          () async => await endpoints.task.updateTaskStatus(
+            sessionBuilder,
+            taskId: task.id!,
+            responderId: 201,
+            newStatus: 'FLYING_TO_MOON', // Invalid status
+            timeoutSeconds: 60,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      });
+
+      test('Accepts all valid severities without error', () async {
+        for (final severity in ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']) {
+          final task = await endpoints.task.createTask(
+            sessionBuilder,
+            title: 'Valid Severity Test — $severity',
+            description: 'Testing severity "$severity"',
+            latitude: 37.7749,
+            longitude: -122.4194,
+            severity: severity,
+            createdById: 101,
+            timeoutSeconds: 60,
+          );
+          expect(task.severity, severity);
+        }
+      });
+
+      test(
+        'Severity input is case-insensitive and normalized to uppercase',
+        () async {
+          final task = await endpoints.task.createTask(
+            sessionBuilder,
+            title: 'Case Test Incident',
+            description: 'Testing case normalization',
+            latitude: 37.7749,
+            longitude: -122.4194,
+            severity: 'critical', // Lowercase
+            createdById: 101,
+            timeoutSeconds: 60,
+          );
+          expect(task.severity, 'CRITICAL');
+        },
+      );
+    },
+  );
 }

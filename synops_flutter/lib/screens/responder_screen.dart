@@ -4,6 +4,7 @@ import 'package:synops_client/synops_client.dart';
 import '../core/theme.dart';
 import '../services/syncops_service.dart';
 import '../widgets/countdown_timer_view.dart';
+import '../widgets/loading_and_empty_states.dart';
 import '../widgets/status_badge.dart';
 import '../widgets/tactical_map_view.dart';
 
@@ -380,35 +381,7 @@ class _ResponderScreenState extends State<ResponderScreen> {
           const SizedBox(height: 12),
           Expanded(
             child: availableTasks.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.verified_outlined,
-                          size: 48,
-                          color: SyncOpsTheme.successGreen,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'No pending emergency tasks in queue.',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: SyncOpsTheme.textPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Switch to Dispatcher to create or simulate a critical incident.',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 13,
-                            color: SyncOpsTheme.textMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                ? const EmptyResponderState()
                 : ListView.builder(
                     itemCount: availableTasks.length,
                     itemBuilder: (context, index) {
@@ -599,7 +572,9 @@ class _ResponderScreenState extends State<ResponderScreen> {
               const SizedBox(height: 12),
               TextField(
                 controller: reasonController,
-                style: GoogleFonts.plusJakartaSans(color: SyncOpsTheme.textPrimary),
+                style: GoogleFonts.plusJakartaSans(
+                  color: SyncOpsTheme.textPrimary,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Reason for Release',
                   filled: true,
@@ -626,8 +601,24 @@ class _ResponderScreenState extends State<ResponderScreen> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: SyncOpsTheme.alertOrange,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-              child: const Text('CONFIRM RELEASE'),
+              child: Text(
+                'CONFIRM RELEASE',
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
+              ),
             ),
           ],
         );
